@@ -1,14 +1,7 @@
-export type TableSchema = {
-    tableName: string,
-    columns: string[]
-}
-
-export type QueryResult = Array<Array<any>>;
+export type QueryResult<T> = Array<T>;
 
 export interface IDatabaseProvider {
     connect(): Promise<void>;
 
-    getSchema(): Promise<TableSchema>;
-
-    query(sql: string): QueryResult;
+    makeQuery<T>(query: string): Promise<QueryResult<T>>;
 }
