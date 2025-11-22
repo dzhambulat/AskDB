@@ -1,3 +1,5 @@
+[![CodeQL Advanced](https://github.com/dzhambulat/AskDB/actions/workflows/codeql.yml/badge.svg)](https://github.com/dzhambulat/AskDB/actions/workflows/codeql.yml)
+
 # AskDB
 
 A database query assistant powered by LangChain and OpenAI.
