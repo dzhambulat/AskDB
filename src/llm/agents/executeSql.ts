@@ -1,28 +1,31 @@
-import { ChatOpenAI } from "@langchain/openai";
-import getSchemaTool from "../tools/getSchema";
-import makeQueryTool from "../tools/makeQuery";
-import { PromptTemplate } from "@langchain/core/prompts";
-import { RunnableSequence } from "@langchain/core/runnables";
+import dotenv from "dotenv";
+dotenv.config();
+
+import { createAgent } from "langchain";
+import { getSchemaTool} from "../tools/getSchema";
+import { makeQueryTool } from "../tools/makeQuery";
+
+
 // openai agent which uses tools from getSchema and makeQuery
 
 const tools = [getSchemaTool, makeQueryTool];
 
-const model = new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    temperature: 0,
+if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY environment variable is not set. Please add it to your .env file.");
+}
+
+const systemPrompt = "You are a helpful assistant that can execute SQL queries on a PostgreSQL database based on user human question. " +
+    "Use tools to execute the query. " +
+    "First you need to get the schema of the database and use the getSchema tool for it. Call it only once" +
+    "Then if you need to execute a query based on the schema, use the makeQuery tool, pass the correct SQL query to it. Use table names and corresponding column names from the schema" +
+    "Don't modify the database, use only SELECT queries. And make only one try and return the result as JSON. If you don't know the answer, say 'I don't know'." +
+    "The result must be in the format of array of JSON objects, no any additional text";
+
+const agent = createAgent({
+    tools: tools,
+    model: "gpt-4o-mini",
+    systemPrompt: systemPrompt
 });
 
 
-const prompt = PromptTemplate.fromTemplate(
-    "You are a helpful assistant that can execute SQL queries on a PostgreSQL database. " +
-    "Use tools to execute the query. " +
-    "If you need to get the schema of the database, use the getSchema tool. " +
-    "If you need to execute a query, use the makeQuery tool. " +
-    "Don't modify the database, use only SELECT queries." +
-    "The user query is: {query} " +
-    "The result of the query is: {result}"
-);
-
-const llmChain = RunnableSequence.from([prompt, model.bindTools(tools)]);
-
-export default llmChain;
+export default agent;

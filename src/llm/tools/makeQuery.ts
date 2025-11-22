@@ -1,20 +1,23 @@
-import { Tool } from "@langchain/core/tools";
+import { IDatabaseProvider } from "../../types/db";
+import { tool, createAgent } from "langchain";
+
 import PostgresSqlProvider from "../../db/postgressql";
 
-class MakeQueryTool extends Tool {
-    name = "make_query";
-    description = "Executes a SQL query on PostgreSQL and returns result as JSON.";
-    constructor(private readonly sqlProvider: PostgresSqlProvider) {
-        super({});
-    }
 
-    async _call(query: string) {
-        return await makeQuery(this.sqlProvider, query);
+const sqlProvider = new PostgresSqlProvider();
+sqlProvider.connect();
+
+export const makeQueryTool = tool(
+    (query: string) => {
+        return makeQuery(sqlProvider, query);
+    },
+    {
+        name: "makeQuery",
+        description: "makes an SQL query to the database and returns the result as JSON",
     }
-}
+);
+
 async function makeQuery(sqlProvider: PostgresSqlProvider, query: string) {
     const result = await sqlProvider.makeQuery<any>(query);
-    return JSON.stringify(result.map((row: any) => row.toJSON()));
+    return JSON.stringify(result.map((row: any) => JSON.stringify(row)));
 }
-
-export default new MakeQueryTool(new PostgresSqlProvider());
