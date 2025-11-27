@@ -10,9 +10,20 @@ function getContentFromAgentRsponse(response: any) {
 }
 
 async function main() {
+  // Get question from command line argument
+  const question = process.argv[2];
+  
+  if (!question) {
+    console.error("Error: Please provide a question as a command line argument.");
+    console.error("Usage: npm start \"Your question here\"");
+    process.exit(1);
+  }
+
   console.log("Running pipeline...");
+  console.log(`Question: ${question}\n`);
+  
   executeSqlAgent.invoke({ messages: [
-    { role: "user", content: "Get me 3 users with the payments with most amount of payments. Give me only name and email." }
+    { role: "user", content: question }
   ]}).then((result) => {
     const content = getContentFromAgentRsponse(result);
     summaryAgent.invoke({ messages: [

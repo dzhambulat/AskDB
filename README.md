@@ -73,10 +73,24 @@ npm run docker:down
 
 ## Usage
 
-Run the development server:
+Run the application with a question as a command line argument:
+
 ```bash
-npm run dev
+npm run dev "Your question here"
 ```
+
+For example:
+```bash
+npm run dev "Get me 3 users with the payments with most amount of payments. Give me only name and email."
+```
+
+The application will:
+1. Process your question through the SQL execution agent
+2. Generate and execute the appropriate SQL query
+3. Summarize the results using the summary agent
+4. Display the final answer
+
+**Note:** The question parameter is required. If you don't provide a question, the application will exit with an error message.
 
 ## Project Structure
 
