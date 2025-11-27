@@ -1,7 +1,32 @@
+[![CodeQL Advanced](https://github.com/dzhambulat/AskDB/actions/workflows/codeql.yml/badge.svg)](https://github.com/dzhambulat/AskDB/actions/workflows/codeql.yml)
+
+
+![LangChain](https://img.shields.io/badge/langchain-%231C3C3C.svg?style=for-the-badge&logo=langchain&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 # AskDB
 
 A database query assistant powered by LangChain and OpenAI.
+You pass human readable question, it transform it and run, then returns formatted example using LLM agents. You need only to set PostgresSQL uri string in .env and OpenAI key. No schema description is required.
+Example of the result:
 
+```Question: Get me 3 users with the payments with most amount of payments. Give me only name and email.```
+```
+Here’s a summary of the data which consists of a list of individuals, including their first names and email addresses.
+### Summary of Contact Information
+
+| First Name | Email                        |
+|------------|------------------------------|
+| Charlie    | charlie.davis@example.com    |
+| Jane       | jane.smith@example.com       |
+| Bob        | bob.wilson@example.com       |
+
+- **Total Contacts:** 3
+- **Details:**
+  - **Charlie Davis** can be reached at **charlie.davis@example.com**.
+  - **Jane Smith** can be reached at **jane.smith@example.com**.
+  - **Bob Wilson** can be reached at **bob.wilson@example.com**
+```
 ## Setup
 
 ### Prerequisites
